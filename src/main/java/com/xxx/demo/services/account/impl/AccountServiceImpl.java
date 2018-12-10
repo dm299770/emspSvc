@@ -1,10 +1,13 @@
 package com.xxx.demo.services.account.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xxx.demo.dto.sys.UserInfo;
 import com.xxx.demo.frame.constants.APIResultConstants;
 import com.xxx.demo.mapper.account.AccountMapper;
+import com.xxx.demo.mapper.user.TsUserMapper;
 import com.xxx.demo.models.jsonBean.account.TtChargeFlow;
 import com.xxx.demo.models.jsonBean.account.UserAccount;
+import com.xxx.demo.models.jsonBean.user.UserInfoData;
 import com.xxx.demo.services.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +26,13 @@ public class AccountServiceImpl implements AccountService {
     private static final String DEDUCT_FATL = "余额不足,缴费失败";
     private static final String DEDUCT_ERROR = "服务异常,请稍后重试或联系相关app";
     private static final String DEDUCT_FORMATERROR = "扣款金额格式不正确,请检查";
+    private static final String CHARGETO="PowerShare";//到达方
 
     @Autowired
     private AccountMapper accountMapper;
+
+    @Autowired
+    private TsUserMapper tsUserMapper;
 
     /**
      *扣款计费
@@ -36,7 +43,7 @@ public class AccountServiceImpl implements AccountService {
     public JSONObject deduct(String user_id, String money) {
         JSONObject json = new JSONObject();
         UserAccount userAccount = null;
-
+        UserInfo userInfo=null;
         if (money==null && money.isEmpty()){
             json.put(APIResultConstants.STATUS,APIResultConstants.ERROR_STATUS);
             json.put(APIResultConstants.MSG,DEDUCT_ERROR);
@@ -69,7 +76,9 @@ public class AccountServiceImpl implements AccountService {
             if(amount>=0) {
                 String id = UUID.randomUUID().toString();//流水单号，
                 Integer direction = -1; //增减标识（扣款为减少，-1）
-                accountMapper.saveChargeFlow(id,user_id,moneyD,direction,updateTime);
+                //发起方查询
+                userInfo=tsUserMapper.findUserPhoneNum(user_id);
+                accountMapper.saveChargeFlow(id,user_id,moneyD,direction,updateTime,userInfo.getPhoneNum(),CHARGETO);
                 json.put(APIResultConstants.STATUS,APIResultConstants.SUCCESS_STATUS);
                 json.put(APIResultConstants.MSG,DEDUCT_SUCCESS);
             }

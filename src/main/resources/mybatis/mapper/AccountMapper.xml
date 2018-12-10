@@ -30,7 +30,7 @@
     </sql>
 
     <sql id="TtChargeFlowColumns">
-        ID,USER_ACCOUNT,AMOUNT,DIRECTION,CHARGE_DATE
+        ID,USER_ACCOUNT,AMOUNT,DIRECTION,CHARGE_DATE,CHARGE_FROM,CHARGE_TO
     </sql>
 
 
@@ -56,7 +56,7 @@
 
     <insert id="saveChargeFlow" parameterType="TtChargeFlow">
         insert into TT_CHARGE_FLOW ( <include refid="TtChargeFlowColumns" />)
-        values (#{id},#{userAccount},#{amount},#{direction},#{chargeDate})
+        values (#{id},#{userAccount},#{amount},#{direction},#{chargeDate},#{chargeFrom},#{chargeTo})
     </insert>
 
 

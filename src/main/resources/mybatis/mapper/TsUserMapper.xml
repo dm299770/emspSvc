@@ -120,4 +120,10 @@
         PHONE_NUM = #{phoneNum} and IS_EFFCTIVE = 1
     </update>
 
+
+    <select id="findUserPhoneNum" resultMap="UserInfoResultMap">
+        select PHONE_NUM from TS_USER
+        WHERE USER_ID=#{userId}
+    </select>
+
 </mapper>

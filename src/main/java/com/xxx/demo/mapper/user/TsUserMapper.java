@@ -1,6 +1,7 @@
 package com.xxx.demo.mapper.user;
 
 import com.xxx.demo.dto.sys.UserInfo;
+import com.xxx.demo.models.jsonBean.user.UserInfoData;
 import com.xxx.demo.models.sys.TsUser;
 import org.apache.ibatis.annotations.Param;
 
@@ -74,4 +75,11 @@ public interface TsUserMapper {
      * @return
      */
     UserInfo findEffctiveUserInfoByPhoneNum(@Param("phoneNum") String phoneNum);
+
+    /**
+     * 根据用户id查找手机号
+     * @param user_id
+     * @return
+     */
+    UserInfo findUserPhoneNum(@Param("userId") String user_id);
 }
