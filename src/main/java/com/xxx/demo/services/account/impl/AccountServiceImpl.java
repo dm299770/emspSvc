@@ -50,30 +50,30 @@ public class AccountServiceImpl implements AccountService {
         }
         try {
             userAccount= accountMapper.selectBalance(user_id);
-            Double balance= Double.valueOf(userAccount.getBalance());//用户余额
+            Double amount= Double.valueOf(userAccount.getBalance());//用户余额
             Double moneyD = Double.parseDouble(money);  //消费金额
-            Double amount=balance-moneyD;
+            Double balance=amount-moneyD;  //消费后的余额
             Date updateTime=new Date();    //下单时间及修改时间
 
             //扣费操作
-            if(moneyD<balance) {
-                accountMapper.upadteBalance(user_id,String.valueOf(amount),updateTime);
+            if(moneyD<amount) {
+                accountMapper.upadteBalance(user_id,String.valueOf(balance),updateTime);
                 json.put(APIResultConstants.STATUS, APIResultConstants.SUCCESS_STATUS);
                 json.put(APIResultConstants.MSG, DEDUCT_SUCCESS);
-                json.put(BALANCE, userAccount.getBalance());
-            }else if(balance.equals(moneyD)){ //如果余额和消费金额相等，则修改余额为零
+                json.put(BALANCE, balance);
+            }else if(amount.equals(moneyD)){ //如果余额和消费金额相等，则修改余额为零
                 accountMapper.upadteBalance(user_id,"0",updateTime);
                 json.put(APIResultConstants.STATUS, APIResultConstants.SUCCESS_STATUS);
                 json.put(APIResultConstants.MSG, DEDUCT_SUCCESS);
-                json.put(BALANCE, userAccount.getBalance());
+                json.put(BALANCE, balance);
             }else{
                 //余额不足
                 json.put(APIResultConstants.STATUS,APIResultConstants.FAIL_STATUS);
                 json.put(APIResultConstants.MSG,DEDUCT_FATL);
-                json.put(BALANCE,userAccount.getBalance());
+                json.put(BALANCE,balance);
             }
             //扣费流水记录
-            if(amount>=0) {
+            if(balance>=0) {
                 String id = UUID.randomUUID().toString();//流水单号，
                 Integer direction = -1; //增减标识（扣款为减少，-1）
                 //发起方查询
