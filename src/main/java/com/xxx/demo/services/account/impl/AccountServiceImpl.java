@@ -53,9 +53,9 @@ public class AccountServiceImpl implements AccountService {
             Double amount = Double.valueOf(userAccount.getBalance());//用户余额
             Double moneyD = Double.parseDouble(money);  //消费金额
             //做减法运算
-            BigDecimal am = BigDecimal.valueOf(amount);
-            BigDecimal mo = BigDecimal.valueOf(moneyD);
-            BigDecimal balance = am.subtract(mo);//消费后的余额
+            BigDecimal amountB = BigDecimal.valueOf(amount);
+            BigDecimal moneyB = BigDecimal.valueOf(moneyD);
+            BigDecimal balance = amountB.subtract(moneyB);//消费后的余额
             Date updateTime = new Date();    //下单时间及修改时间
 
             //扣费操作
